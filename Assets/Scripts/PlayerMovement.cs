@@ -3,6 +3,42 @@ using System.Collections;
 
 public class PlayerMovement : MonoBehaviour {
 
+	private CharacterController controller;
+	public float speed = 3.0f;
+	public float jumpSpeed = 2.0f;
+	public float gravity = 10.0f;
+	public float moveAmount;
+	KeyboardInput userInput;
+	Vector3 movement = Vector3.zero;
+
+	void Start(){
+		controller = gameObject.GetComponent<CharacterController>  ();
+		userInput = gameObject.GetComponent<KeyboardInput>();
+	}
+
+
+	void Update(){
+		//if (controller.isGrounded) {
+			if (userInput.XAxis > 0) {  //forward
+				movement = new Vector3 (1, 0, 0) * Time.deltaTime;
+			} else if (userInput.XAxis < 0) {  //backward
+					movement = new Vector3 (-1, 0, 0) * Time.deltaTime;
+			}
+			
+			if (userInput.JumpButtonPressedThisFrame) {  //jumping
+			movement.y = jumpSpeed;
+			}
+
+
+			movement = transform.TransformDirection(movement);
+			movement *= speed;
+			movement.y -=gravity * Time.deltaTime;
+			controller.Move (movement);
+		movement = Vector3.zero;
+		//}
+	}//end of update
+
+
     /*
      * TO DO:
      * Movement
